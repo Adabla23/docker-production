@@ -2,8 +2,11 @@ from flask import Flask, jsonify
 import socket
 import redis
 import os
+from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
+
+metrics = PrometheusMetrics(app)
 
 r = redis.Redis(host=os.getenv("REDIS_HOST", "redis"), port=6379)
 
@@ -11,7 +14,7 @@ r = redis.Redis(host=os.getenv("REDIS_HOST", "redis"), port=6379)
 def home():
     visits = r.incr("visits")
     return jsonify({
-        "message": "Hello from Docker Compose!",
+        "message": "Hello from Docker Production!",
         "hostname": socket.gethostname(),
         "visits": int(visits)
     })
